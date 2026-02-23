@@ -78,11 +78,11 @@ export const DEFAULT_SELLER: SellerConfig = {
   companyName: 'FUNDACIÓN ASPACE SALAMANCA',
   nif: 'G-06986053',
   address: 'C/ JUAN DEL ENCINA, 4-6, 37004 SALAMANCA',
-  email: 'administracion@aspacesalamanca.org',
+  email: 'elenmp@hotmail.es',
   phone: '+34 923 18 18 18',
   iban: 'ES88 2103 2319 1700 3010 1695',
   logoUrl: 'https://wsrv.nl/?url=aspacesalamanca.org/wp-content/uploads/2025/09/logo_aspace-1-scaled.jpg',
-  googleSheetUrl: '' // Debe configurarse con la URL que termina en /exec
+  googleSheetUrl: 'https://script.google.com/macros/s/AKfycbwMgOPI1mNxuCUIxrkebZUwrHDrc0xeACeeOGQ1Nt-Y7XTyRcdcBuDA4eBI6TXFRWeN/exec'
 };
 
 export const TRANSLATIONS: Record<Language, any> = {
