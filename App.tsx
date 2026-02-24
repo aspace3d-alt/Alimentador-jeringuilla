@@ -147,7 +147,6 @@ const App: React.FC = () => {
           envio: SHIPPING_RATES[buyerData.shippingMethod].label[lang],
           total: grandTotal.toFixed(2),
           idioma: lang,
-          email_admin: sellerConfig.email,
           cupon: isCouponValid ? 'ASPACE2026' : (isVolumeDiscountActive ? 'VOLUMEN' : 'NINGUNO')
         };
 
