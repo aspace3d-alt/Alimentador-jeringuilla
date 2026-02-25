@@ -135,19 +135,24 @@ const App: React.FC = () => {
 
     if (sellerConfig.googleSheetUrl) {
       try {
+        // Restauramos el formato JSON original que sabemos que tu script procesa.
+        // Ajustamos las claves para que la dirección vaya a la columna correcta (envio).
         const payload = {
-          id: newQuote.id,
           fecha: newQuote.date,
-          producto: product.name[lang],
+          id: newQuote.id,
           cliente: buyerData.name,
-          nif: buyerData.taxId,
-          email: buyerData.email,
-          direccion: buyerData.address,
+          email: buyerData.email.toLowerCase(),
           unidades: buyerData.units,
-          envio: SHIPPING_RATES[buyerData.shippingMethod].label[lang],
+          cantidad: buyerData.units, // Enviamos ambos por si acaso
           total: grandTotal.toFixed(2),
-          idioma: lang,
-          cupon: isCouponValid ? 'ASPACE2026' : (isVolumeDiscountActive ? 'VOLUMEN' : 'NINGUNO')
+          // IMPORTANTE: Tu script mapea 'envio' a la Columna G. 
+          // Enviamos aquí la dirección para que aparezca en "Dirección de envío".
+          envio: buyerData.address, 
+          cupon: isCouponValid ? 'ASPACE2026' : (isVolumeDiscountActive ? 'VOLUMEN' : 'NINGUNO'),
+          transporte: SHIPPING_RATES[buyerData.shippingMethod].label[lang],
+          nif: buyerData.taxId,
+          producto: product.name[lang],
+          idioma: lang
         };
 
         await fetch(sellerConfig.googleSheetUrl, {
