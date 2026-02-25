@@ -259,7 +259,7 @@ const App: React.FC = () => {
               <div className="space-y-10">
                 <div className="space-y-6">
                   <span className="text-blue-600 font-black uppercase tracking-[0.2em] text-[11px] block">{product.tagline[lang]}</span>
-                  <h1 className="text-6xl md:text-8xl font-black text-[#0f172a] leading-[0.85] tracking-tighter">
+                  <h1 className="text-5xl md:text-7xl font-black text-[#0f172a] leading-[0.9] tracking-tighter">
                     {product.name[lang].split(' ').map((word, i) => (
                       <React.Fragment key={i}>
                         {word}<br />
@@ -267,14 +267,14 @@ const App: React.FC = () => {
                     ))}
                   </h1>
                 </div>
-                <p className="text-lg text-slate-500 leading-relaxed font-medium max-w-lg">
+                <p className="text-base text-slate-500 leading-relaxed font-medium max-w-lg">
                   {product.description[lang]}
                 </p>
                 <div className="grid grid-cols-3 gap-6 pt-4 border-t border-slate-100">
                   {t.benefits.map((b: any, i: number) => (
                     <div key={i} className="space-y-2">
-                      <div className="text-3xl mb-1">{b.icon}</div>
-                      <h4 className="font-black text-[11px] uppercase tracking-wider text-[#0f172a]">{b.title}</h4>
+                      <div className="text-2xl mb-1">{b.icon}</div>
+                      <h4 className="font-black text-xs uppercase tracking-wider text-[#0f172a]">{b.title}</h4>
                       <p className="text-[10px] text-slate-400 leading-normal font-medium">{b.desc}</p>
                     </div>
                   ))}
@@ -290,14 +290,14 @@ const App: React.FC = () => {
               </div>
 
               <div className="bg-white p-8 md:p-12 rounded-[4rem] border border-slate-100 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.08)] relative overflow-hidden">
-                <header className="mb-10 flex justify-between items-start relative z-10">
+                <header className="mb-10 grid grid-cols-[1fr_auto] gap-6 items-start relative z-10">
                   <div className="space-y-1">
-                    <h2 className="text-3xl font-black tracking-tight text-[#0f172a] leading-tight">{t.formTitle}</h2>
-                    <p className="text-slate-400 text-[11px] font-bold leading-relaxed max-w-[180px]">{t.formSubtitle}</p>
+                    <h2 className="text-2xl font-black tracking-tight text-[#0f172a] leading-tight">{t.formTitle}</h2>
+                    <p className="text-slate-400 text-[11px] font-bold leading-relaxed">{t.formSubtitle}</p>
                   </div>
-                  <div className="text-right bg-slate-50 px-5 py-3 rounded-3xl border border-slate-100">
-                    <span className="text-[9px] font-black text-slate-400 block uppercase tracking-widest mb-0.5">Precio Un.</span>
-                    <span className={`text-3xl font-black tracking-tighter transition-colors ${(isCouponValid || isVolumeDiscountActive) ? 'text-green-600' : 'text-blue-600'}`}>
+                  <div className="text-right bg-slate-50 px-4 py-2.5 rounded-2xl border border-slate-100 flex-shrink-0">
+                    <span className="text-[8px] font-black text-slate-400 block uppercase tracking-widest mb-0.5">Precio Un.</span>
+                    <span className={`text-2xl font-black tracking-tighter transition-colors ${(isCouponValid || isVolumeDiscountActive) ? 'text-green-600' : 'text-blue-600'}`}>
                       {appliedUnitPrice}€
                     </span>
                   </div>
@@ -312,7 +312,7 @@ const App: React.FC = () => {
                     <div className="space-y-2">
                       <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-1">{t.deliveryLabel}</label>
                       <div className="relative h-full">
-                        <select value={buyerData.shippingMethod} onChange={(e) => setBuyerData({ ...buyerData, shippingMethod: e.target.value as ShippingMethod })} className="w-full h-[72px] pl-4 pr-10 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-blue-600 outline-none text-[9px] font-black uppercase cursor-pointer transition-all shadow-sm appearance-none">
+                        <select value={buyerData.shippingMethod} onChange={(e) => setBuyerData({ ...buyerData, shippingMethod: e.target.value as ShippingMethod })} className="w-full h-[72px] pl-4 pr-10 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-blue-600 outline-none text-[11px] font-black uppercase cursor-pointer transition-all shadow-sm appearance-none">
                           {Object.entries(SHIPPING_RATES).map(([key, val]) => (
                             <option key={key} value={key}>
                               {val.label[lang]} {val.price > 0 ? `(${val.price.toFixed(2).replace('.', ',')} €)` : ''}
@@ -330,7 +330,7 @@ const App: React.FC = () => {
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg ${isVolumeDiscountActive ? 'bg-green-600 text-white' : 'bg-blue-600 text-white'}`}>
                       {isVolumeDiscountActive ? '✅' : '📢'}
                     </div>
-                    <p className={`text-[11px] font-black uppercase tracking-tight ${isVolumeDiscountActive ? 'text-green-700' : 'text-blue-700'}`}>
+                    <p className={`text-xs font-black uppercase tracking-tight ${isVolumeDiscountActive ? 'text-green-700' : 'text-blue-700'}`}>
                       {isVolumeDiscountActive ? t.volumeApplied : t.volumeOffer}
                     </p>
                   </div>
@@ -384,7 +384,7 @@ const App: React.FC = () => {
                     </div>
                     <div className="flex justify-between items-center pt-1">
                       <span className="text-blue-400 font-black text-[10px] uppercase tracking-[0.2em]">{t.totalQuote}</span>
-                      <span className="text-4xl font-black tracking-tighter">{grandTotal.toFixed(2)}€</span>
+                      <span className="text-3xl font-black tracking-tighter">{grandTotal.toFixed(2)}€</span>
                     </div>
                   </div>
 
