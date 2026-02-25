@@ -10,18 +10,30 @@ const App: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [sellerConfig] = useState<SellerConfig>(() => {
-    const saved = localStorage.getItem('aspace_seller_config');
-    return saved ? JSON.parse(saved) : DEFAULT_SELLER;
+    try {
+      const saved = localStorage.getItem('aspace_seller_config');
+      return saved ? JSON.parse(saved) : DEFAULT_SELLER;
+    } catch (e) {
+      return DEFAULT_SELLER;
+    }
   });
 
   const [product] = useState<Product>(() => {
-    const saved = localStorage.getItem('aspace_product_config');
-    return saved ? JSON.parse(saved) : INITIAL_PRODUCTS[0];
+    try {
+      const saved = localStorage.getItem('aspace_product_config');
+      return saved ? JSON.parse(saved) : INITIAL_PRODUCTS[0];
+    } catch (e) {
+      return INITIAL_PRODUCTS[0];
+    }
   });
 
   const [quoteCounter, setQuoteCounter] = useState<number>(() => {
-    const saved = localStorage.getItem('aspace_quote_counter');
-    return saved ? parseInt(saved, 10) : 1;
+    try {
+      const saved = localStorage.getItem('aspace_quote_counter');
+      return saved ? parseInt(saved, 10) : 1;
+    } catch (e) {
+      return 1;
+    }
   });
 
   const [activeImageIdx, setActiveImageIdx] = useState(0);
