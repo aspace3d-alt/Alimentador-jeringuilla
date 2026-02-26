@@ -121,7 +121,7 @@ const App: React.FC = () => {
   const isVolumeDiscountActive = buyerData.units >= 3;
   const isCouponValid = isCouponMatch && !isVolumeDiscountActive;
   
-  const appliedUnitPrice = (isCouponValid || isVolumeDiscountActive) ? 39.00 : product.basePrice;
+  const appliedUnitPrice = (isCouponValid || isVolumeDiscountActive) ? (product.basePrice - 2.00) : product.basePrice;
   const productTotal = appliedUnitPrice * buyerData.units;
   const shippingTotal = SHIPPING_RATES[buyerData.shippingMethod].price;
   const grandTotal = productTotal + shippingTotal;
