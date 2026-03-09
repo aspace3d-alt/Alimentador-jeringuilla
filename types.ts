@@ -1,5 +1,5 @@
 
-export type ShippingMethod = 'pickup' | 'spain' | 'portugal';
+export type ShippingMethod = 'pickup' | 'home_spain' | 'home_portugal' | 'pickup_point';
 export type Language = 'es' | 'pt';
 
 export interface Product {

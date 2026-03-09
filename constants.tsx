@@ -64,12 +64,16 @@ export const SHIPPING_RATES: Record<ShippingMethod, { label: Record<Language, st
     label: { es: 'RECOGIDA EN SEDE (GRATIS)', pt: 'RECOLHA NA SEDE (GRÁTIS)' }, 
     price: 0 
   },
-  spain: { 
-    label: { es: 'ESPAÑA PENINSULAR', pt: 'ESPANHA PENINSULAR' }, 
+  pickup_point: { 
+    label: { es: 'PUNTO DE RECOGIDA (PENÍNSULA Y BALEARES)', pt: 'PONTO DE RECOLHA (PENÍNSULA E BALEARES)' }, 
+    price: 5.05 
+  },
+  home_spain: { 
+    label: { es: 'DOMICILIO: ESPAÑA PENINSULAR', pt: 'DOMICÍLIO: ESPANHA PENINSULAR' }, 
     price: 7.30 
   },
-  portugal: { 
-    label: { es: 'PORTUGAL PENINSULAR', pt: 'PORTUGAL PENINSULAR' }, 
+  home_portugal: { 
+    label: { es: 'DOMICILIO: PORTUGAL PENINSULAR', pt: 'DOMICÍLIO: PORTUGAL PENINSULAR' }, 
     price: 8.80 
   }
 };
@@ -124,7 +128,7 @@ export const TRANSLATIONS: Record<Language, any> = {
     downloadBtn: 'Descargar PDF',
     footerDesc: 'Proyecto de innovación social desarrollado para mejorar la calidad de vida de personas con parálisis cerebral u otra discapacidad y las personas que las cuidan.',
     free: 'Gratis',
-    shippingDetail: 'Opciones: Recogida gratuita en sede (Salamanca) o envío por mensería a España/Portugal.'
+    shippingDetail: 'Opciones: Recogida gratuita en sede (Salamanca), Punto de Recogida (Península y Baleares) o Envío a Domicilio (Península).'
   },
   pt: {
     welcome: 'Selecione o seu idioma',
@@ -164,6 +168,6 @@ export const TRANSLATIONS: Record<Language, any> = {
     downloadBtn: 'Descarregar PDF',
     footerDesc: 'Projeto de inovação social desarrollado para mejorar la qualidade de vida de pessoas com paralisia cerebral ou outra deficiência e as personas que cuidam delas.',
     free: 'Grátis',
-    shippingDetail: 'Opções: Recolha gratuita na sede (Salamanca) o envío por correio para Espanha/Portugal.'
+    shippingDetail: 'Opções: Recolha gratuita na sede (Salamanca), Ponto de Recolha (Península e Baleares) ou Envio ao Domicílio (Península).'
   }
 };

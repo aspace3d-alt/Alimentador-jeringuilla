@@ -104,11 +104,11 @@ const App: React.FC = () => {
           <div className="grid grid-cols-1 gap-4">
             <button onClick={() => setLang('es')} className="group bg-white shadow-2xl shadow-slate-200/50 border-2 border-transparent hover:border-blue-600 p-8 rounded-[2.5rem] transition-all flex items-center justify-between transform hover:-translate-y-1">
               <span className="text-xl font-black text-slate-800 tracking-tight">Español</span>
-              <span className="text-3xl">🇪🇸</span>
+              <img src="https://flagcdn.com/es.svg" alt="España" className="w-12 h-auto rounded-md shadow-md" referrerPolicy="no-referrer" />
             </button>
             <button onClick={() => setLang('pt')} className="group bg-white shadow-2xl shadow-slate-200/50 border-2 border-transparent hover:border-blue-600 p-8 rounded-[2.5rem] transition-all flex items-center justify-between transform hover:-translate-y-1">
               <span className="text-xl font-black text-slate-800 tracking-tight">Português</span>
-              <span className="text-3xl">🇵🇹</span>
+              <img src="https://flagcdn.com/pt.svg" alt="Portugal" className="w-12 h-auto rounded-md shadow-md" referrerPolicy="no-referrer" />
             </button>
           </div>
         </div>
@@ -309,9 +309,9 @@ const App: React.FC = () => {
                       <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-1">{t.unitsLabel}</label>
                       <input type="number" min="1" required value={buyerData.units} onChange={(e) => setBuyerData({ ...buyerData, units: parseInt(e.target.value) || 1 })} className="w-full px-4 py-5 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-blue-600 outline-none font-black text-2xl transition-all shadow-sm text-center" />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-1">{t.deliveryLabel}</label>
-                      <div className="relative h-full">
+                      <div className="relative">
                         <select value={buyerData.shippingMethod} onChange={(e) => setBuyerData({ ...buyerData, shippingMethod: e.target.value as ShippingMethod })} className="w-full h-[72px] pl-4 pr-10 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-blue-600 outline-none text-[11px] font-black uppercase cursor-pointer transition-all shadow-sm appearance-none">
                           {Object.entries(SHIPPING_RATES).map(([key, val]) => (
                             <option key={key} value={key}>
@@ -324,6 +324,12 @@ const App: React.FC = () => {
                         </div>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
+                    <p className="text-[9px] text-slate-400 font-bold leading-relaxed uppercase tracking-wider">
+                      {t.shippingDetail}
+                    </p>
                   </div>
 
                   <div className={`p-4 rounded-2xl border-2 transition-all flex items-center gap-4 ${isVolumeDiscountActive ? 'bg-green-50 border-green-200' : 'bg-blue-50 border-blue-100'}`}>
