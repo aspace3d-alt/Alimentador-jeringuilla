@@ -8,6 +8,7 @@ const App: React.FC = () => {
   const [lang, setLang] = useState<Language | null>(null);
   const [view, setView] = useState<'catalog' | 'landing' | 'quote'>('catalog');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showApprovalReminder, setShowApprovalReminder] = useState(false);
   
   const [sellerConfig] = useState<SellerConfig>(() => {
     try {
@@ -178,6 +179,7 @@ const App: React.FC = () => {
     setCurrentQuote(newQuote);
     setQuoteCounter(prev => prev + 1);
     setView('quote');
+    setShowApprovalReminder(true);
     setIsSubmitting(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -187,6 +189,30 @@ const App: React.FC = () => {
       {toastMessage && (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-8 py-4 rounded-full shadow-2xl z-[100] animate-in slide-in-from-bottom-4 flex items-center gap-3">
           <span className="font-black text-[10px] tracking-widest uppercase">{toastMessage}</span>
+        </div>
+      )}
+
+      {showApprovalReminder && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] flex items-center justify-center p-4 animate-in fade-in duration-300">
+          <div className="bg-white rounded-[2.5rem] p-8 max-w-md w-full shadow-2xl transform animate-in zoom-in-95 duration-300">
+            <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
+              <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-3 leading-tight">
+              {t.reminderTitle}
+            </h3>
+            <p className="text-slate-600 font-medium leading-relaxed mb-8">
+              {t.reminderBody}
+            </p>
+            <button 
+              onClick={() => setShowApprovalReminder(false)}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-2xl shadow-xl shadow-blue-100 transition-all transform active:scale-[0.98] text-sm uppercase tracking-widest"
+            >
+              {t.reminderBtn}
+            </button>
+          </div>
         </div>
       )}
 
@@ -456,8 +482,32 @@ const App: React.FC = () => {
                 </button>
                 <button onClick={() => {
                   if (!currentQuote) return;
-                  const subject = encodeURIComponent(`${lang === 'es' ? 'Aprobación Presupuesto' : 'Aprovação Orçamento'} ${currentQuote.id} - ${buyerData.name}`);
-                  const body = encodeURIComponent(`${lang === 'es' ? 'Hola,' : 'Olá,'}\n\n${lang === 'es' ? 'Apruebo el presupuesto' : 'Aprovo o orçamento'} ${currentQuote.id} ${lang === 'es' ? 'para la compra de' : 'para a compra de'} ${buyerData.units} ${lang === 'es' ? 'unidades de' : 'unidades de'} ${INITIAL_PRODUCTS[0].name[lang]}.\n\n${lang === 'es' ? 'Por favor, generen la factura previa al pago.' : 'Por favor, gerem a fatura antes do pagamento.'}\n\n${lang === 'es' ? 'Datos del cliente' : 'Dados do cliente'}:\n${lang === 'es' ? 'Nombre' : 'Nome'}: ${buyerData.name}\nNIF/CIF: ${buyerData.taxId}\nEmail: ${buyerData.email}\n${lang === 'es' ? 'Dirección' : 'Morada'}: ${buyerData.address}\n\n${lang === 'es' ? 'Un saludo.' : 'Cumprimentos.'}`);
+                  
+                  const baseImponible = currentQuote.productTotal + currentQuote.shippingTotal;
+                  const iva = baseImponible * 0.21;
+                  const total = baseImponible + iva;
+
+                  const detail = `
+DETALLE DEL PEDIDO:
+-------------------------------------------
+Concepto: ${INITIAL_PRODUCTS[0].name['es']}
+Cantidad: ${buyerData.units}
+Precio Un.: ${currentQuote.appliedUnitPrice.toFixed(2).replace('.', ',')}€ + IVA
+Subtotal: ${currentQuote.productTotal.toFixed(2).replace('.', ',')}€
+
+Concepto: Gastos de envío y embalaje (${SHIPPING_RATES[buyerData.shippingMethod].label['es']})
+Cantidad: 1
+Precio Un.: ${currentQuote.shippingTotal.toFixed(2).replace('.', ',')}€
+Subtotal: ${currentQuote.shippingTotal.toFixed(2).replace('.', ',')}€
+-------------------------------------------
+Base Imponible: ${baseImponible.toFixed(2).replace('.', ',')}€
+IVA (21%): ${iva.toFixed(2).replace('.', ',')}€
+TOTAL: ${total.toFixed(2).replace('.', ',')}€
+-------------------------------------------`;
+
+                  // Forzamos el correo a estar siempre en español para administración
+                  const subject = encodeURIComponent(`Aprobación Presupuesto ${currentQuote.id} - ${buyerData.name}`);
+                  const body = encodeURIComponent(`Hola,\n\nApruebo el presupuesto ${currentQuote.id} para la compra de ${buyerData.units} unidades de ${INITIAL_PRODUCTS[0].name['es']}.\n\nPor favor, generen la factura previa al pago.\n\n${detail}\n\nDatos del cliente:\nNombre: ${buyerData.name}\nNIF/CIF: ${buyerData.taxId}\nEmail: ${buyerData.email}\nDirección: ${buyerData.address}\n\nUn saludo.`);
                   window.location.href = `mailto:administracion@aspacesalamanca.org?subject=${subject}&body=${body}`;
                 }} className="flex-1 bg-blue-600 text-white font-black py-5 px-10 rounded-2xl shadow-xl hover:bg-blue-700 transition-all flex items-center justify-center gap-4 text-sm tracking-tighter">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>

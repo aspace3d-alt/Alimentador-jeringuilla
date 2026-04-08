@@ -127,6 +127,9 @@ export const TRANSLATIONS: Record<Language, any> = {
     btnBack: 'Volver al Catálogo',
     downloadBtn: 'Descargar PDF',
     btnApprove: 'Aprobar y Enviar por Email',
+    reminderTitle: '¿Está de acuerdo con el presupuesto?',
+    reminderBody: 'Si está conforme, por favor pulse el botón "Aprobar y Enviar por Email" para que podamos generar su factura oficial.',
+    reminderBtn: 'Entendido',
     footerDesc: 'Proyecto de innovación social desarrollado para mejorar la calidad de vida de personas con parálisis cerebral u otra discapacidad y las personas que las cuidan.',
     free: 'Gratis',
     shippingDetail: 'Opciones: Recogida gratuita en sede (Salamanca), Punto de Recogida (Península y Baleares) o Envío a Domicilio (Península).'
@@ -168,6 +171,9 @@ export const TRANSLATIONS: Record<Language, any> = {
     btnBack: 'Voltar ao Catálogo',
     downloadBtn: 'Descarregar PDF',
     btnApprove: 'Aprovar e Enviar por Email',
+    reminderTitle: 'Está de acordo com o orçamento?',
+    reminderBody: 'Se estiver de acordo, por favor clique no botão "Aprovar e Enviar por Email" para que possamos gerar a sua fatura oficial.',
+    reminderBtn: 'Entendido',
     footerDesc: 'Projeto de inovação social desarrollado para mejorar la qualidade de vida de pessoas com paralisia cerebral ou outra deficiência e as personas que cuidam delas.',
     free: 'Grátis',
     shippingDetail: 'Opções: Recolha gratuita na sede (Salamanca), Ponto de Recolha (Península e Baleares) ou Envio ao Domicílio (Península).'
