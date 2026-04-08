@@ -61,7 +61,7 @@ export const INITIAL_PRODUCTS: Product[] = [
 
 export const SHIPPING_RATES: Record<ShippingMethod, { label: Record<Language, string>, price: number }> = {
   pickup: { 
-    label: { es: 'RECOGIDA EN SEDE (GRATIS)', pt: 'RECOLHA NA SEDE (GRÁTIS)' }, 
+    label: { es: 'RECOGIDA EN SEDE (Salamanca) (GRATIS)', pt: 'RECOLHA NA SEDE (Salamanca) (GRÁTIS)' }, 
     price: 0 
   },
   pickup_point: { 
