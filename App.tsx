@@ -124,7 +124,10 @@ const App: React.FC = () => {
   const appliedUnitPrice = (isCouponValid || isVolumeDiscountActive) ? (product.basePrice - 2.00) : product.basePrice;
   const productTotal = appliedUnitPrice * buyerData.units;
   const shippingTotal = SHIPPING_RATES[buyerData.shippingMethod].price;
-  const grandTotal = productTotal + shippingTotal;
+  
+  // New calculation: basePrice is WITHOUT VAT, so we add 21% to the sum
+  const baseTotal = productTotal + shippingTotal;
+  const grandTotal = baseTotal * 1.21;
 
   const handleGenerateQuote = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -139,43 +142,37 @@ const App: React.FC = () => {
       seller: sellerConfig,
       productTotal,
       shippingTotal,
-      taxAmount: grandTotal * 0.21,
+      taxAmount: baseTotal * 0.21,
       total: grandTotal,
       language: lang,
       appliedUnitPrice: appliedUnitPrice
     };
 
     if (sellerConfig.googleSheetUrl) {
-      try {
-        // Restauramos el formato JSON original que sabemos que tu script procesa.
-        // Ajustamos las claves para que la dirección vaya a la columna correcta (envio).
-        const payload = {
-          fecha: newQuote.date,
-          id: newQuote.id,
-          cliente: buyerData.name,
-          email: buyerData.email.toLowerCase(),
-          unidades: buyerData.units,
-          cantidad: buyerData.units, // Enviamos ambos por si acaso
-          total: grandTotal.toFixed(2),
-          // IMPORTANTE: Tu script mapea 'envio' a la Columna G. 
-          // Enviamos aquí la dirección para que aparezca en "Dirección de envío".
-          envio: buyerData.address, 
-          cupon: isCouponValid ? 'ASPACE2026' : (isVolumeDiscountActive ? 'VOLUMEN' : 'NINGUNO'),
-          transporte: SHIPPING_RATES[buyerData.shippingMethod].label[lang],
-          nif: buyerData.taxId,
-          producto: product.name[lang],
-          idioma: lang
-        };
+      const payload = {
+        fecha: newQuote.date,
+        id: newQuote.id,
+        cliente: buyerData.name,
+        email: buyerData.email.toLowerCase(),
+        unidades: buyerData.units,
+        cantidad: buyerData.units,
+        total: grandTotal.toFixed(2),
+        envio: buyerData.address, 
+        cupon: isCouponValid ? 'ASPACE2026' : (isVolumeDiscountActive ? 'VOLUMEN' : 'NINGUNO'),
+        transporte: SHIPPING_RATES[buyerData.shippingMethod].label[lang],
+        nif: buyerData.taxId,
+        producto: product.name[lang],
+        idioma: lang
+      };
 
-        await fetch(sellerConfig.googleSheetUrl, {
-          method: 'POST',
-          mode: 'no-cors', 
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      } catch (err) {
-        console.error('Error enviando a Google Sheets:', err);
-      }
+      // Enviamos en segundo plano sin 'await' para que la UI no se quede bloqueada
+      // Usamos 'text/plain' para evitar el preflight OPTIONS que a veces falla con Google Scripts
+      fetch(sellerConfig.googleSheetUrl, {
+        method: 'POST',
+        mode: 'no-cors', 
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload)
+      }).catch(err => console.error('Error background fetch:', err));
     }
 
     setCurrentQuote(newQuote);
@@ -230,7 +227,7 @@ const App: React.FC = () => {
                         <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 block mb-1">{p.tagline[lang]}</span>
                         <h3 className="text-2xl font-black text-slate-900 tracking-tight leading-tight">{p.name[lang]}</h3>
                       </div>
-                      <span className="bg-slate-900 text-white text-xs font-black px-3 py-1.5 rounded-lg">{p.basePrice}€</span>
+                      <span className="bg-slate-900 text-white text-[10px] font-black px-3 py-1.5 rounded-lg whitespace-nowrap">{p.basePrice.toFixed(2).replace('.', ',')}€ + IVA</span>
                     </div>
                     <p className="text-slate-500 text-sm leading-relaxed line-clamp-3">{p.description[lang]}</p>
                     <div className="pt-2 flex justify-end">
@@ -297,8 +294,8 @@ const App: React.FC = () => {
                   </div>
                   <div className="text-right bg-slate-50 px-4 py-2.5 rounded-2xl border border-slate-100 flex-shrink-0">
                     <span className="text-[8px] font-black text-slate-400 block uppercase tracking-widest mb-0.5">Precio Un.</span>
-                    <span className={`text-2xl font-black tracking-tighter transition-colors ${(isCouponValid || isVolumeDiscountActive) ? 'text-green-600' : 'text-blue-600'}`}>
-                      {appliedUnitPrice}€
+                    <span className={`text-xl font-black tracking-tighter transition-colors ${(isCouponValid || isVolumeDiscountActive) ? 'text-green-600' : 'text-blue-600'}`}>
+                      {appliedUnitPrice.toFixed(2).replace('.', ',')}€ <span className="text-[10px] opacity-60">+ IVA</span>
                     </span>
                   </div>
                 </header>
@@ -378,19 +375,19 @@ const App: React.FC = () => {
                   <div className="bg-[#0f172a] rounded-[2.5rem] p-8 text-white space-y-4 shadow-xl">
                     <div className="flex justify-between text-[10px] font-black text-slate-500 uppercase tracking-widest">
                       <span>Base {product.name[lang]}</span>
-                      <span className="text-white">{(productTotal / 1.21).toFixed(2)}€</span>
+                      <span className="text-white">{productTotal.toFixed(2).replace('.', ',')}€</span>
                     </div>
                     <div className="flex justify-between text-[10px] font-black text-slate-500 uppercase tracking-widest">
                       <span>{t.shipping}</span>
-                      <span className="text-white">{(shippingTotal / 1.21).toFixed(2)}€</span>
+                      <span className="text-white">{shippingTotal.toFixed(2).replace('.', ',')}€</span>
                     </div>
                     <div className="flex justify-between text-[10px] font-black text-slate-500 uppercase tracking-widest pb-4 border-b border-white/10">
                       <span>{t.tax}</span>
-                      <span className="text-white">{(grandTotal - (grandTotal / 1.21)).toFixed(2)}€</span>
+                      <span className="text-white">{(baseTotal * 0.21).toFixed(2).replace('.', ',')}€</span>
                     </div>
                     <div className="flex justify-between items-center pt-1">
                       <span className="text-blue-400 font-black text-[10px] uppercase tracking-[0.2em]">{t.totalQuote}</span>
-                      <span className="text-3xl font-black tracking-tighter">{grandTotal.toFixed(2)}€</span>
+                      <span className="text-3xl font-black tracking-tighter">{grandTotal.toFixed(2).replace('.', ',')}€</span>
                     </div>
                   </div>
 
@@ -452,10 +449,19 @@ const App: React.FC = () => {
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
                 {t.btnBack}
               </button>
-              <div className="flex gap-4 w-full sm:w-auto">
-                <button onClick={handleDownloadPdf} className="flex-1 bg-blue-600 text-white font-black py-5 px-10 rounded-2xl shadow-xl hover:bg-blue-700 transition-all flex items-center justify-center gap-4 text-sm tracking-tighter">
+              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                <button onClick={handleDownloadPdf} className="flex-1 bg-slate-100 text-slate-900 font-black py-5 px-10 rounded-2xl shadow-sm hover:bg-slate-200 transition-all flex items-center justify-center gap-4 text-sm tracking-tighter">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                   {t.downloadBtn}
+                </button>
+                <button onClick={() => {
+                  if (!currentQuote) return;
+                  const subject = encodeURIComponent(`${lang === 'es' ? 'Aprobación Presupuesto' : 'Aprovação Orçamento'} ${currentQuote.id} - ${buyerData.name}`);
+                  const body = encodeURIComponent(`${lang === 'es' ? 'Hola,' : 'Olá,'}\n\n${lang === 'es' ? 'Apruebo el presupuesto' : 'Aprovo o orçamento'} ${currentQuote.id} ${lang === 'es' ? 'para la compra de' : 'para a compra de'} ${buyerData.units} ${lang === 'es' ? 'unidades de' : 'unidades de'} ${INITIAL_PRODUCTS[0].name[lang]}.\n\n${lang === 'es' ? 'Por favor, generen la factura previa al pago.' : 'Por favor, gerem a fatura antes do pagamento.'}\n\n${lang === 'es' ? 'Datos del cliente' : 'Dados do cliente'}:\n${lang === 'es' ? 'Nombre' : 'Nome'}: ${buyerData.name}\nNIF/CIF: ${buyerData.taxId}\nEmail: ${buyerData.email}\n${lang === 'es' ? 'Dirección' : 'Morada'}: ${buyerData.address}\n\n${lang === 'es' ? 'Un saludo.' : 'Cumprimentos.'}`);
+                  window.location.href = `mailto:administracion@aspacesalamanca.org?subject=${subject}&body=${body}`;
+                }} className="flex-1 bg-blue-600 text-white font-black py-5 px-10 rounded-2xl shadow-xl hover:bg-blue-700 transition-all flex items-center justify-center gap-4 text-sm tracking-tighter">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                  {t.btnApprove}
                 </button>
               </div>
             </div>

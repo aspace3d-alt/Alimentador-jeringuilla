@@ -16,7 +16,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       es: 'Transforma el esfuerzo manual repetitivo en un suave movimiento de giro, eliminando el estrés articular y garantizando la seguridad en el proceso de alimentación por PEG.',
       pt: 'Transforma o esforço manual repetitivo num movimento de rotação suave, eliminando o stress articular e garantindo a segurança no processo de alimentación.'
     },
-    basePrice: 53.00,
+    basePrice: 43.50,
     images: [
       'https://i.postimg.cc/9F36ZWZH/Imagen1.jpg',
       'https://i.postimg.cc/j28JV8z5/Gemini-Generated-Image-rcchjyrcchjyrcch.png',
@@ -105,7 +105,7 @@ export const TRANSLATIONS: Record<Language, any> = {
     specsTitle: 'Especificaciones',
     maintenanceTitle: 'Cuidado y Mantenimiento',
     formTitle: 'Solicitar Presupuesto',
-    formSubtitle: 'Completa los datos para generar tu presupuesto. Tras realizar la transferencia, es necesario enviar el justificante del pago a hola3d@aspacesalamanca.org.',
+    formSubtitle: 'Completa los datos para generar tu presupuesto. Para aprobarlo y generar la factura previa al pago, envíalo a administracion@aspacesalamanca.org.',
     unitsLabel: 'UNIDADES',
     deliveryLabel: 'MODO DE ENTREGA',
     couponLabel: 'CUPÓN DE DESCUENTO',
@@ -126,6 +126,7 @@ export const TRANSLATIONS: Record<Language, any> = {
     btnSending: 'Enviando datos...',
     btnBack: 'Volver al Catálogo',
     downloadBtn: 'Descargar PDF',
+    btnApprove: 'Aprobar y Enviar por Email',
     footerDesc: 'Proyecto de innovación social desarrollado para mejorar la calidad de vida de personas con parálisis cerebral u otra discapacidad y las personas que las cuidan.',
     free: 'Gratis',
     shippingDetail: 'Opciones: Recogida gratuita en sede (Salamanca), Punto de Recogida (Península y Baleares) o Envío a Domicilio (Península).'
@@ -145,7 +146,7 @@ export const TRANSLATIONS: Record<Language, any> = {
     specsTitle: 'Especificações',
     maintenanceTitle: 'Cuidado e Manutenção',
     formTitle: 'Solicitar Orçamento',
-    formSubtitle: 'Preencha os dados para gerar o seu orçamento. Após realizar a transferência, é necessário enviar o comprovativo do pagamento para hola3d@aspacesalamanca.org.',
+    formSubtitle: 'Preencha os dados para gerar o seu orçamento. Para aprová-lo e gerar a fatura antes do pagamento, envie-o para administracion@aspacesalamanca.org.',
     unitsLabel: 'UNIDADES',
     deliveryLabel: 'MODO DE ENTREGA',
     couponLabel: 'CUPÃO DE DESCONTO',
@@ -166,6 +167,7 @@ export const TRANSLATIONS: Record<Language, any> = {
     btnSending: 'A enviar dados...',
     btnBack: 'Voltar ao Catálogo',
     downloadBtn: 'Descarregar PDF',
+    btnApprove: 'Aprovar e Enviar por Email',
     footerDesc: 'Projeto de inovação social desarrollado para mejorar la qualidade de vida de pessoas com paralisia cerebral ou outra deficiência e as personas que cuidam delas.',
     free: 'Grátis',
     shippingDetail: 'Opções: Recolha gratuita na sede (Salamanca), Ponto de Recolha (Península e Baleares) ou Envio ao Domicílio (Península).'

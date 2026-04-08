@@ -11,9 +11,10 @@ const QuoteDocument: React.FC<QuoteDocumentProps> = ({ quote }) => {
   const { seller, buyer, product, productTotal, shippingTotal, total, language, appliedUnitPrice } = quote;
   const shippingInfo = SHIPPING_RATES[buyer.shippingMethod];
   
-  // IVA Calculation (assumed 21% included in prices)
-  const baseImponible = total / 1.21;
-  const ivaAmount = total - baseImponible;
+  // IVA Calculation (21% added to base prices)
+  const baseImponible = productTotal + shippingTotal;
+  const ivaAmount = baseImponible * 0.21;
+  const totalCalculated = baseImponible + ivaAmount;
 
   const labels = {
     es: {
@@ -30,13 +31,13 @@ const QuoteDocument: React.FC<QuoteDocumentProps> = ({ quote }) => {
       shippingLabel: 'Gastos de envío y embalaje',
       paymentInstr: 'Instrucciones de Pago',
       refLabel: 'Referencia:',
-      ibanLabel: 'IBAN para transferencia',
-      holderLabel: 'Titular de la cuenta',
+      ibanLabel: 'IBAN PARA TRANSFERENCIA',
+      holderLabel: 'TITULAR DE LA CUENTA',
       footer: 'Este presupuesto tiene una validez de 15 días naturales. ASPACE Salamanca es una entidad sin ánimo de lucro (Ley 49/2002). Su compra apoya directamente nuestros proyectos de innovación social.',
       invoiceNote: [
-        'NOTA IMPORTANTE: Este documento es un presupuesto proforma válido para la realización de la transferencia.',
-        'Tras realizar el pago, es necesario enviar el justificante del pago por correo electrónico a hola3d@aspacesalamanca.org.',
-        'La factura oficial definitiva será emitida y enviada una vez confirmada la recepción del pago.'
+        'NOTA IMPORTANTE: ESTE DOCUMENTO ES UN PRESUPUESTO PROFORMA.',
+        'Para aprobar este presupuesto y generar la factura previa al pago, envíe este documento a administracion@aspacesalamanca.org.',
+        'TRAS RECIBIR LA FACTURA OFICIAL, PODRÁ REALIZAR EL PAGO MEDIANTE TRANSFERENCIA BANCARIA.'
       ]
     },
     pt: {
@@ -53,13 +54,13 @@ const QuoteDocument: React.FC<QuoteDocumentProps> = ({ quote }) => {
       shippingLabel: 'Custos de envio e embalagem',
       paymentInstr: 'Instruções de Pagamento',
       refLabel: 'Referência:',
-      ibanLabel: 'IBAN para transferência',
-      holderLabel: 'Titular da conta',
+      ibanLabel: 'IBAN PARA TRANSFERÊNCIA',
+      holderLabel: 'TITULAR DA CONTA',
       footer: 'Este orçamento é válido por 15 dias seguidos. ASPACE Salamanca é uma entidade sem fins lucrativos. A sua compra apoia diretamente os nossos projetos de inovação social.',
       invoiceNote: [
-        'NOTA IMPORTANTE: Este documento é um orçamento proforma válido para a realização da transferência.',
-        'Após realizar o pagamento, é necessário enviar o comprovativo do pagamento por e-mail para hola3d@aspacesalamanca.org.',
-        'A fatura oficial definitiva será emitida e enviada após a confirmação do recebimento do pagamento.'
+        'NOTA IMPORTANTE: ESTE DOCUMENTO É UM ORÇAMENTO PROFORMA.',
+        'Para aprovar este orçamento e gerar a fatura antes do pagamento, envie este documento para administracion@aspacesalamanca.org.',
+        'APÓS RECEBER A FATURA OFICIAL, PODERÁ REALIZAR O PAGAMENTO POR TRANSFERÊNCIA BANCÁRIA.'
       ]
     }
   };
@@ -111,8 +112,8 @@ const QuoteDocument: React.FC<QuoteDocumentProps> = ({ quote }) => {
               <p className="text-[10px] text-slate-400 italic">ID: {product.id}</p>
             </td>
             <td className="text-center py-3 text-slate-700 font-medium text-sm">{buyer.units}</td>
-            <td className="text-right py-3 text-slate-700 font-medium text-sm">{(appliedUnitPrice / 1.21).toFixed(2)}€</td>
-            <td className="text-right py-3 font-bold text-slate-900 text-sm">{(productTotal / 1.21).toFixed(2)}€</td>
+            <td className="text-right py-3 text-slate-700 font-medium text-sm">{appliedUnitPrice.toFixed(2).replace('.', ',')}€ <span className="text-[9px] opacity-60">+ IVA</span></td>
+            <td className="text-right py-3 font-bold text-slate-900 text-sm">{productTotal.toFixed(2).replace('.', ',')}€</td>
           </tr>
           {shippingTotal > 0 && (
             <tr>
@@ -121,8 +122,8 @@ const QuoteDocument: React.FC<QuoteDocumentProps> = ({ quote }) => {
                 <p className="text-[10px] text-slate-400">{shippingInfo.label[language]}</p>
               </td>
               <td className="text-center py-3 text-slate-700 text-sm">1</td>
-              <td className="text-right py-3 text-slate-700 font-medium text-sm">{(shippingTotal / 1.21).toFixed(2)}€</td>
-              <td className="text-right py-3 font-bold text-slate-900 text-sm">{(shippingTotal / 1.21).toFixed(2)}€</td>
+              <td className="text-right py-3 text-slate-700 font-medium text-sm">{shippingTotal.toFixed(2).replace('.', ',')}€</td>
+              <td className="text-right py-3 font-bold text-slate-900 text-sm">{shippingTotal.toFixed(2).replace('.', ',')}€</td>
             </tr>
           )}
         </tbody>
@@ -132,15 +133,15 @@ const QuoteDocument: React.FC<QuoteDocumentProps> = ({ quote }) => {
         <div className="w-64 space-y-2">
           <div className="flex justify-between text-xs text-slate-500">
             <span>{l.base}</span>
-            <span className="font-bold">{baseImponible.toFixed(2)}€</span>
+            <span className="font-bold">{baseImponible.toFixed(2).replace('.', ',')}€</span>
           </div>
           <div className="flex justify-between text-xs text-slate-500">
             <span>{l.tax}</span>
-            <span className="font-bold">{ivaAmount.toFixed(2)}€</span>
+            <span className="font-bold">{ivaAmount.toFixed(2).replace('.', ',')}€</span>
           </div>
           <div className="flex justify-between text-xl font-black text-blue-600 border-t-2 border-slate-900 pt-2">
             <span>TOTAL</span>
-            <span>{total.toFixed(2)}€</span>
+            <span>{totalCalculated.toFixed(2).replace('.', ',')}€</span>
           </div>
         </div>
       </div>
@@ -163,12 +164,12 @@ const QuoteDocument: React.FC<QuoteDocumentProps> = ({ quote }) => {
         </div>
       </div>
 
-      <div className="mb-6 p-4 border border-slate-200 bg-slate-50 rounded-sm text-center space-y-2">
+      <div className="mb-6 p-6 border border-blue-100 bg-blue-50/30 rounded-sm text-center space-y-3">
         {(l.invoiceNote as string[]).map((note, idx) => (
-          <p key={idx} className={`text-[11px] tracking-wide leading-tight ${
+          <p key={idx} className={`text-[11px] tracking-wide leading-relaxed ${
             idx === 0 ? 'font-black text-slate-900 uppercase' : 
             idx === 1 ? 'font-black text-blue-600' : 
-            'font-bold text-slate-600 uppercase'
+            'font-bold text-slate-400 uppercase'
           }`}>
             {note}
           </p>
